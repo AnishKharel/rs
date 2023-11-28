@@ -16,6 +16,7 @@ from gluon.validators import (
     IS_MATCH,
     IS_NOT_EMPTY,
     IS_NOT_IN_DB,
+    IS_NOT_INVALID_CHARACTER,
 )
 from pydal.objects import Table, Field, Row
 import datetime
@@ -335,6 +336,9 @@ class AuthAPI(object):
                         "%s.username" % settings.table_user_name,
                         error_message=self.messages.username_taken,
                     ),
+                    IS_NOT_INVALID_CHARACTER(
+                        username
+                    )
                 ]
                 if not settings.username_case_sensitive:
                     is_unique_username.insert(1, IS_LOWER())

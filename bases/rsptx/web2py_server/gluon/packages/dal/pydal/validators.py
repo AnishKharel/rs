@@ -157,6 +157,20 @@ def validator_caller(func, value, record_id=None):
         raise ValidationError(error)
     return value
 
+class IS_NOT_INVALID_CHARACTER(Validator):
+    """
+    """
+    def __init__(self,expression, error_message="Invalid expression (emojis?)"):
+        self.expression = expression
+        self.error_message = error_message
+    def validate(self, value, record_id=None):
+        emoji_pattern = re.compile(r'[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F700-\U0001F77F\U0001F780-\U0001F7FF\U0001F800-\U0001F8FF\U0001F900-\U0001F9FF\U0001FA00-\U0001FA6F\U0001FA70-\U0001FAFF]')
+
+        if emoji_pattern.search(value):
+            raise ValidationError(self.translator(self.error_message))
+        return value
+
+        
 
 class IS_MATCH(Validator):
     """
@@ -3956,7 +3970,6 @@ class IS_LOWER(Validator):
             cast_back = to_bytes
         value = to_unicode(value).lower()
         return cast_back(value)
-
 
 class IS_UPPER(Validator):
     """
